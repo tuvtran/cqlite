@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include "cqlite.h"
 
 
 int main(int argc, char **argc) {
@@ -19,4 +21,27 @@ int main(int argc, char **argc) {
             printf("Unknown command '%s'.\n", input_buffer->buffer);
         }
     }
+}
+
+
+void print_prompt() {
+    printf("cqlite> ");
+}
+
+
+InputBuffer* new_input_buffer() {
+    InputBuffer* input_buffer;
+
+    // allocating blocks of memory in the heap
+    // for the input buffer
+    if ((input_buffer = malloc(sizeof(InputBuffer))) == NULL) {
+        fprintf(stderr, "Error allocating blocks for buffer %s.\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    input_buffer->buffer = NULL;
+    input_buffer->buffer_length = 0;
+    input_buffer->input_length = 0;
+
+    return input_buffer;
 }
