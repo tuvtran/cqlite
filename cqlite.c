@@ -15,12 +15,34 @@ int main(int argc, char** argv) {
         print_prompt();
         read_input(input_buffer);
 
-        // if it's the exit command
-        if (strcmp(input_buffer->buffer, "\\exit") == 0) {
-            exit(EXIT_SUCCESS);
-        } else {
-            printf("Unknown command '%s'.\n", input_buffer->buffer);
+        // if the command is a meta command
+        if (input_buffer->buffer[0] == '\\') {
+            switch (handle_meta_command(input_buffer)) {
+                // if the meta command is executed successfully
+                case META_COMMAND_SUCCESS:
+                    continue;
+                case META_COMMAND_UNRECOGNIZED_COMMAND:
+                    fprintf(stderr, "Unrecognized command '%s'.\n",
+                            input_buffer->buffer);
+                    continue;
+            }
         }
+
+        Statement statement;
+        // convert the line of input into our internal
+        // representation of a statement
+        switch (prepare_statement(input_buffer, &statement)) {
+            case PREPARE_SUCCESS:
+                break;
+            case PREPARE_UNRECOGNIZED_STATEMENT:
+                fprintf(stderr, "Unrecognized statement '%s'.\n",
+                        input_buffer->buffer);
+                continue;
+        }
+
+        // execute a statement, ie., a SQL queries
+        execute_statement(&statement);
+        printf("Executed.\n");
     }
 }
 
@@ -61,4 +83,14 @@ void read_input(InputBuffer* input_buffer) {
     // ignore trailing newline
     input_buffer->input_length = bytes_read - 1;
     input_buffer->buffer[bytes_read - 1] = '\0';
+}
+
+
+MetaCommand handle_meta_command(InputBuffer* input_buffer) {
+    if (strcmp(input_buffer->buffer, "\\exit") == 0) {
+        free(input_buffer);
+        exit(EXIT_SUCCESS);
+    } else {
+        return META_COMMAND_UNRECOGNIZED_COMMAND;
+    }
 }
