@@ -1,21 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include "cqlite.h"
 
 
-int main(int argc, char **argc) {
+int main(int argc, char** argv) {
     InputBuffer* input_buffer = new_input_buffer();
     /**
      * our program will have an infinite loop that prints the prompt
      * get a line of input then processes that line of input
      */
-    while (true) {
+    while (1) {
         print_prompt();
         read_input(input_buffer);
 
         // if it's the exit command
-        if (strcmp(input_buffer->buffer, ".exit") == 0) {
+        if (strcmp(input_buffer->buffer, "\\exit") == 0) {
             exit(EXIT_SUCCESS);
         } else {
             printf("Unknown command '%s'.\n", input_buffer->buffer);
