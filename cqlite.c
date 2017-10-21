@@ -45,3 +45,19 @@ InputBuffer* new_input_buffer() {
 
     return input_buffer;
 }
+
+
+void read_input(InputBuffer* input_buffer) {
+    ssize_t bytes_read;
+    
+    if ((bytes_read = getline(
+        &(input_buffer->buffer),
+        &(input_buffer->buffer_length), stdin)) == 0) {
+            fprintf(stderr, "Error reading input from user %s.\n", strerror(errno));
+            exit(EXIT_FAILURE);
+        }
+
+    // ignore trailing newline
+    input_buffer->input_length = bytes_read - 1;
+    input_buffer->buffer[bytes_read - 1] = '\0';
+}
