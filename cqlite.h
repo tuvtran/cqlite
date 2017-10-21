@@ -42,15 +42,22 @@ typedef struct Statement_t {
 
 
 // create new input buffer
-InputBuffer* new_input_buffer();
+InputBuffer *new_input_buffer();
 // print a prompt to the user
 void print_prompt();
 // read input from the command line
-void read_input(InputBuffer*);
+void read_input(InputBuffer *);
 
 // handle the meta command
 // this is a wrapper function
 MetaCommandResult handle_meta_command(InputBuffer *);
+
+// prepare_statement convert our statement
+// into the result
+PrepareResult prepare_statement(InputBuffer *, Statement *);
+
+// execute a SQL statement
+void execute_statement(Statement *);
 
 
 #endif

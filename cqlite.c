@@ -5,8 +5,8 @@
 #include "cqlite.h"
 
 
-int main(int argc, char** argv) {
-    InputBuffer* input_buffer = new_input_buffer();
+int main(int argc, char **argv) {
+    InputBuffer *input_buffer = new_input_buffer();
     /**
      * our program will have an infinite loop that prints the prompt
      * get a line of input then processes that line of input
@@ -14,6 +14,10 @@ int main(int argc, char** argv) {
     while (1) {
         print_prompt();
         read_input(input_buffer);
+
+        // if the command is empty
+        if (input_buffer->buffer[0] == '\0')
+            continue;
 
         // if the command is a meta command
         if (input_buffer->buffer[0] == '\\') {
@@ -52,8 +56,8 @@ void print_prompt() {
 }
 
 
-InputBuffer* new_input_buffer() {
-    InputBuffer* input_buffer;
+InputBuffer *new_input_buffer() {
+    InputBuffer *input_buffer;
 
     // allocating blocks of memory in the heap
     // for the input buffer
@@ -70,7 +74,7 @@ InputBuffer* new_input_buffer() {
 }
 
 
-void read_input(InputBuffer* input_buffer) {
+void read_input(InputBuffer *input_buffer) {
     ssize_t bytes_read;
     
     if ((bytes_read = getline(
@@ -86,11 +90,40 @@ void read_input(InputBuffer* input_buffer) {
 }
 
 
-MetaCommand handle_meta_command(InputBuffer* input_buffer) {
+MetaCommandResult handle_meta_command(InputBuffer *input_buffer) {
     if (strcmp(input_buffer->buffer, "\\exit") == 0) {
         free(input_buffer);
         exit(EXIT_SUCCESS);
     } else {
         return META_COMMAND_UNRECOGNIZED_COMMAND;
+    }
+}
+
+
+PrepareResult prepare_statement(InputBuffer *input_buffer,
+                                Statement *statement) {
+
+    // now our "compiler" only understands two words
+    // "insert" and "select"
+    if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
+        statement->type = STATEMENT_INSERT;
+        return PREPARE_SUCCESS;
+    } else if (strncmp(input_buffer->buffer, "select", 6) == 0) {
+        statement->type = STATEMENT_SELECT;
+        return PREPARE_SUCCESS;
+    }
+
+    return PREPARE_UNRECOGNIZED_STATEMENT;
+}
+
+
+void execute_statement(Statement *statement) {
+    switch (statement->type) {
+        case STATEMENT_INSERT:
+            printf("We would do an INSERT here.\n");
+            break;
+        case STATEMENT_SELECT:
+            printf("We would do a SELECT here.\n");
+            break;
     }
 }
