@@ -38,6 +38,8 @@ int main(int argc, char **argv) {
         switch (prepare_statement(input_buffer, &statement)) {
             case PREPARE_SUCCESS:
                 break;
+            case PREPARE_SYNTAX_ERROR:
+                fprintf(stderr, "Syntax error '%s'.\n", input_buffer->buffer);
             case PREPARE_UNRECOGNIZED_STATEMENT:
                 fprintf(stderr, "Unrecognized statement '%s'.\n",
                         input_buffer->buffer);
@@ -108,10 +110,10 @@ PrepareResult prepare_statement(InputBuffer *input_buffer,
     if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
         int args_assigned = sscanf(
-            input->buffer, "insert %d %s %s",
-            &(input->row_to_insert.id),
-            input->row_to_insert.username,
-            input->row_to_insert.email);
+            input_buffer->buffer, "insert %d %s %s",
+            &(statement->row_to_insert.id),
+            statement->row_to_insert.username,
+            statement->row_to_insert.email);
 
         // sscanf returns the number of arguments filled
         // so we'll check if all three variables are filled

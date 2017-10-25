@@ -1,8 +1,8 @@
 #ifndef CQLITE_H
 #define CQLITE_H
 
-static const u_int32_t COLUMN_USERNAME_SIZE = 32
-static const u_int32_t COLUMN_EMAIL_SIZE = 255
+static const u_int32_t COLUMN_USERNAME_SIZE = 32;
+static const u_int32_t COLUMN_EMAIL_SIZE = 255;
 
 /**
  * An awesome way to get the size of an attribute of a struct
