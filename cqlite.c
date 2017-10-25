@@ -107,6 +107,17 @@ PrepareResult prepare_statement(InputBuffer *input_buffer,
     // "insert" and "select"
     if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
+        int args_assigned = sscanf(
+            input->buffer, "insert %d %s %s",
+            &(input->row_to_insert.id),
+            input->row_to_insert.username,
+            input->row_to_insert.email);
+
+        // sscanf returns the number of arguments filled
+        // so we'll check if all three variables are filled
+        if (args_assigned < 3)
+            return PREPARE_SYNTAX_ERROR;
+
         return PREPARE_SUCCESS;
     } else if (strncmp(input_buffer->buffer, "select", 6) == 0) {
         statement->type = STATEMENT_SELECT;

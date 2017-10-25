@@ -1,6 +1,16 @@
 #ifndef CQLITE_H
 #define CQLITE_H
 
+static const u_int32_t COLUMN_USERNAME_SIZE = 32
+static const u_int32_t COLUMN_EMAIL_SIZE = 255
+
+/**
+ * An awesome way to get the size of an attribute of a struct
+ * without resorting to initializing a new varialbe
+ * Source: https://stackoverflow.com/questions/3553296/c-sizeof-single-struct-member
+ */
+#define attr_size(Struct, Attribute) sizeof(((Struct *)0) -> Attribute)
+
 
 /**
  * buffer store the buffer
@@ -26,7 +36,8 @@ typedef enum MetaCommandResult_t {
 
 typedef enum PrepareResult_t {
     PREPARE_SUCCESS,
-    PREPARE_UNRECOGNIZED_STATEMENT
+    PREPARE_UNRECOGNIZED_STATEMENT,
+    PREPARE_SYNTAX_ERROR
 } PrepareResult;
 
 
@@ -36,9 +47,25 @@ typedef enum StatementType_t {
 } StatementType;
 
 
+typedef struct Row_t {
+    u_int32_t id;
+    char username[COLUMN_USERNAME_SIZE];
+    char email[COLUMN_USERNAME_SIZE];
+} Row;
+
+
 typedef struct Statement_t {
     StatementType type;
+    Row row_to_insert; // only used by insert statement
 } Statement;
+
+
+/**
+ * Defining some constants for Row
+ */
+static const u_int32_t ID_SIZE = attr_size(Row, id);
+static const u_int32_t USERNAME_SIZE = attr_size(Row, username);
+static const u_int32_t EMAIL_SIZE = attr_size(Row, email);
 
 
 // create new input buffer
