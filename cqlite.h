@@ -90,5 +90,11 @@ PrepareResult prepare_statement(InputBuffer *, Statement *);
 // execute a SQL statement
 void execute_statement(Statement *);
 
+// code to convert to the compact serialization of rows
+void serialize_row(Row *, void *);
+
+// code to convert from the compact serialization of rows
+void deserialize_row(void *, Row *);
+
 
 #endif
