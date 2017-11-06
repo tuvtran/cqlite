@@ -13,18 +13,6 @@ static const u_int32_t COLUMN_EMAIL_SIZE = 255;
 
 
 /**
- * Defining some constants for Row
- */
-static const u_int32_t ID_SIZE = attr_size(Row, id);
-static const u_int32_t USERNAME_SIZE = attr_size(Row, username);
-static const u_int32_t EMAIL_SIZE = attr_size(Row, email);
-static const u_int32_t ID_OFFSET = 0;
-static const u_int32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
-static const u_int32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
-static const u_int32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
-
-
-/**
  * buffer store the buffer
  * buffer_length size of the allocated buffer
  * input_length number of bytes read
@@ -64,6 +52,18 @@ typedef struct Row_t {
     char username[COLUMN_USERNAME_SIZE];
     char email[COLUMN_USERNAME_SIZE];
 } Row;
+
+
+/**
+ * Defining some constants for Row
+ */
+static const u_int32_t ID_SIZE = attr_size(Row, id);
+static const u_int32_t USERNAME_SIZE = attr_size(Row, username);
+static const u_int32_t EMAIL_SIZE = attr_size(Row, email);
+static const u_int32_t ID_OFFSET = 0;
+static const u_int32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
+static const u_int32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
+static const u_int32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
 
 typedef struct Statement_t {
